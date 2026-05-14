@@ -20,12 +20,13 @@ LIME='\e[38;5;155m'
 ungu="\e[38;5;99m"
 NC='\033[0m'
 
-# GANTI REPO DISINI
-REPO="https://raw.githubusercontent.com/AldyYz/v7/main/"
+# REPO GITHUB
+REPO="https://raw.githubusercontent.com/aldhhena-pixel/SC-TUNNELING-V1/main/"
 
+# TELEGRAM NOTIF
 TIMES="10"
-CHATID="ISI_ID_TELEGRAM"
-KEY="ISI_BOT_TOKEN"
+CHATID=""
+KEY=""
 URL="https://api.telegram.org/bot$KEY/sendMessage"
 
 clear
@@ -69,7 +70,9 @@ fi
 # INSTALL PACKAGE
 apt update -y
 apt upgrade -y
-apt install -y curl wget unzip sudo git cron socat dos2unix nginx screen jq net-tools
+apt install -y \
+curl wget unzip sudo git cron socat dos2unix nginx screen jq \
+net-tools haproxy fail2ban vnstat neofetch figlet ruby lolcat
 
 # BUAT FOLDER
 mkdir -p /etc/xray
@@ -82,8 +85,10 @@ touch /var/log/xray/error.log
 
 # DOMAIN
 clear
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "1. Pakai Domain Sendiri"
 echo "2. Pakai Domain Random"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 read -p "Pilih Opsi : " host
 
@@ -114,6 +119,9 @@ systemctl enable xray
 systemctl restart xray
 
 # INSTALL NGINX
+clear
+echo "Installing Nginx..."
+
 wget -O /etc/nginx/nginx.conf "${REPO}limit/nginx.conf"
 wget -O /etc/nginx/conf.d/xray.conf "${REPO}limit/xray.conf"
 
@@ -122,7 +130,7 @@ sed -i "s/xxx/${domain}/g" /etc/nginx/conf.d/xray.conf
 systemctl enable nginx
 systemctl restart nginx
 
-# SSL
+# INSTALL SSL
 clear
 echo "Installing SSL..."
 
@@ -131,6 +139,8 @@ apt install -y socat cron
 curl https://get.acme.sh | sh
 
 ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+
+systemctl stop nginx
 
 ~/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256
 
@@ -143,14 +153,23 @@ chmod 777 /etc/xray/xray.key
 systemctl restart nginx
 systemctl restart xray
 
-# MENU INSTALL
+# DOWNLOAD MENU
 clear
 echo "Downloading Menu..."
 
+cd /root
+
 wget ${REPO}limit/menu.zip
-unzip menu.zip
+
+unzip -o menu.zip
+
 chmod +x menu/*
+
 mv menu/* /usr/local/sbin
+
+chmod +x /usr/local/sbin/*
+
+ln -s /usr/local/sbin/menu /usr/bin/menu
 
 rm -rf menu
 rm -rf menu.zip
@@ -162,20 +181,35 @@ if [ -f ~/.bashrc ]; then
 . ~/.bashrc
 fi
 fi
+
 mesg n || true
-menu
+/usr/local/sbin/menu
 EOF
 
 # AUTO CLEAR LOG
 echo "*/10 * * * * root echo -n > /var/log/xray/access.log" >/etc/cron.d/clearlog
 echo "*/10 * * * * root echo -n > /var/log/nginx/access.log" >>/etc/cron.d/clearlog
 
-# RESTART SERVICE
+# ENABLE SERVICE
 systemctl daemon-reload
 systemctl enable cron
 systemctl restart cron
 
+systemctl enable nginx
+systemctl enable xray
+systemctl enable haproxy
+systemctl enable fail2ban
+systemctl enable vnstat
+
+systemctl restart nginx
+systemctl restart xray
+systemctl restart haproxy
+systemctl restart fail2ban
+systemctl restart vnstat
+
 # NOTIF TELEGRAM
+if [[ ! -z "$CHATID" && ! -z "$KEY" ]]; then
+
 TEXT="
 <b>INSTALL VPS SUCCESS</b>
 
@@ -189,8 +223,11 @@ curl -s --max-time $TIMES \
 -d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" \
 $URL >/dev/null
 
+fi
+
 # CLEAN
 history -c
+
 rm -rf /root/*.sh
 rm -rf /root/*.zip
 
