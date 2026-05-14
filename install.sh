@@ -13,10 +13,10 @@ LIME='\e[38;5;155m'
 ungu="\e[38;5;99m"
 NC='\033[0m'
 
-# REPO GITHUB
+# REPO
 REPO="https://raw.githubusercontent.com/aldhhena-pixel/SC-TUNNELING-V1/main/"
 
-# TELEGRAM NOTIF
+# TELEGRAM
 TIMES="10"
 CHATID=""
 KEY=""
@@ -33,106 +33,80 @@ echo ""
 sleep 2
 
 # CEK ARCH
-if [[ $(uname -m) == "x86_64" ]]; then
- echo -e "${BIWhite}Architecture Supported (${ungu}$(uname -m)${BIWhite})${NC}"
-else
+if [[ $(uname -m) != "x86_64" ]]; then
  echo -e "${RED}Architecture Tidak Support${NC}"
  exit 1
 fi
 
 # CEK OS
-OS=$(grep -w ID /etc/os-release | head -n1 | sed 's/ID=//g' | tr -d '"')
+OS=$(grep -w ID /etc/os-release | head -n1 | cut -d= -f2 | tr -d '"')
 
-if [[ "$OS" == "ubuntu" || "$OS" == "debian" ]]; then
- echo -e "${BIWhite}OS Supported (${ungu}$(grep PRETTY_NAME /etc/os-release | cut -d= -f2 | tr -d '"')${BIWhite})${NC}"
-else
+if [[ "$OS" != "ubuntu" && "$OS" != "debian" ]]; then
  echo -e "${RED}OS Tidak Support${NC}"
  exit 1
 fi
 
 echo ""
-read -p "$(echo -e "${BIWhite}Tekan ${YELLOW}[ ENTER ]${NC} ${BIWhite}Untuk Memulai Install${NC}")"
+read -p "Tekan ENTER untuk lanjut install..."
 
 clear
 
-if [ "${EUID}" -ne 0 ]; then
- echo "Jalankan script sebagai root"
+if [ "$EUID" -ne 0 ]; then
+ echo "Jalankan sebagai root"
  exit 1
 fi
 
-# UPDATE PACKAGE
-apt update -y
-apt upgrade -y
+# UPDATE
+apt update -y && apt upgrade -y
 
-# INSTALL PACKAGE
-apt install -y \
- curl wget unzip sudo git cron socat dos2unix nginx screen jq \
- net-tools haproxy fail2ban vnstat neofetch figlet ruby-full lolcat \
- python3 python3-pip
+# PACKAGE
+apt install -y curl wget unzip sudo git cron socat dos2unix nginx screen jq net-tools haproxy fail2ban vnstat neofetch figlet ruby-full lolcat python3 python3-pip
 
-# BUAT FOLDER
-mkdir -p /etc/xray
-mkdir -p /var/log/xray
-mkdir -p /usr/local/sbin
-mkdir -p /var/www/html
-
-touch /etc/xray/domain
-touch /var/log/xray/access.log
-touch /var/log/xray/error.log
+# FOLDER
+mkdir -p /etc/xray /var/log/xray /usr/local/sbin /var/www/html
+touch /etc/xray/domain /var/log/xray/access.log /var/log/xray/error.log
 
 # DOMAIN
 clear
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "1. Pakai Domain Sendiri"
 echo "2. Pakai Domain Random"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+read -p "Pilih : " host
 
-read -p "Pilih Opsi : " host
-
-if [[ $host == "1" ]]; then
- read -p "Masukkan Domain : " host1
- echo $host1 >/etc/xray/domain
- echo $host1 >/root/domain
+if [[ "$host" == "1" ]]; then
+ read -p "Domain : " domain
+ echo "$domain" > /etc/xray/domain
 else
- wget -q ${REPO}limit/cf.sh
- chmod +x cf.sh
+ wget -q ${REPO}limit/cf.sh -O cf.sh
  bash cf.sh
  rm -f cf.sh
 fi
 
 domain=$(cat /etc/xray/domain)
 
-# INSTALL XRAY
+# XRAY
 clear
-echo "Installing Xray..."
-
+echo "Install Xray..."
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u www-data
 
 wget -O /etc/xray/config.json "${REPO}limit/config.json"
-
 sed -i "s/xxx/${domain}/g" /etc/xray/config.json
 
-systemctl enable xray
-systemctl restart xray
+systemctl enable xray && systemctl restart xray
 
-# INSTALL NGINX
+# NGINX
 clear
-echo "Installing Nginx..."
-
+echo "Install Nginx..."
 wget -O /etc/nginx/nginx.conf "${REPO}limit/nginx.conf"
 wget -O /etc/nginx/conf.d/xray.conf "${REPO}limit/xray.conf"
 
 sed -i "s/xxx/${domain}/g" /etc/nginx/conf.d/xray.conf
 
-systemctl enable nginx
-systemctl restart nginx
+systemctl enable nginx && systemctl restart nginx
 
-# INSTALL SSL
+# SSL
 clear
-echo "Installing SSL..."
-
+echo "Install SSL..."
 curl https://get.acme.sh | sh
-
 ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
 
 systemctl stop nginx
@@ -145,51 +119,38 @@ systemctl stop nginx
 
 chmod 777 /etc/xray/xray.key
 
-systemctl restart nginx
-systemctl restart xray
+systemctl restart nginx xray
 
-# DOWNLOAD MENU
+# MENU
 clear
-echo "Downloading Menu..."
+echo "Install Menu..."
 
 cd /root
+rm -rf menu menu.zip
 
-rm -rf menu
-rm -rf menu.zip
-
-wget ${REPO}limit/menu.zip
-
+wget -O menu.zip ${REPO}limit/menu.zip
 unzip -o menu.zip
 
-chmod +x *
+chmod +x menu
 
-mv add* /usr/local/sbin/ 2>/dev/null
-mv cek* /usr/local/sbin/ 2>/dev/null
-mv del* /usr/local/sbin/ 2>/dev/null
-mv renew* /usr/local/sbin/ 2>/dev/null
-mv menu /usr/local/sbin/ 2>/dev/null
-mv m-* /usr/local/sbin/ 2>/dev/null
-mv bot* /usr/local/sbin/ 2>/dev/null
-mv clearlog /usr/local/sbin/ 2>/dev/null
-mv restart /usr/local/sbin/ 2>/dev/null
+mv add* cek* del* renew* bot* m-* clearlog restart /usr/local/sbin/ 2>/dev/null
+mv menu /usr/local/sbin/
 
 chmod +x /usr/local/sbin/*
 
 rm -f /usr/bin/menu
 ln -s /usr/local/sbin/menu /usr/bin/menu
 
-# HAPUS LICENSE / EXPIRED CHECKER
-sed -i '/Masa Aktif Script Kamu Sudah Habis/,+8d' /usr/local/sbin/menu
-sed -i '/if \[\[ "\\$certifacate" -le "0" \]\]; then/,/fi/c\sts="\${Info}"' /usr/local/sbin/menu
+# FIX SAFE (hapus error tanpa merusak script)
+if grep -q "Masa Aktif Script Kamu Sudah Habis" /usr/local/sbin/menu; then
+ sed -i '/Masa Aktif Script Kamu Sudah Habis/,+8d' /usr/local/sbin/menu
+fi
 
 chmod +x /usr/local/sbin/menu
 
-rm -rf menu
-rm -rf menu.zip
-
-# PROFILE
-cat >/root/.profile <<EOF
-if [ "\$BASH" ]; then
+# PROFILE FIX (ANTI EOF ERROR)
+cat >/root/.profile <<'EOF'
+if [ "$BASH" ]; then
  if [ -f ~/.bashrc ]; then
   . ~/.bashrc
  fi
@@ -199,61 +160,28 @@ mesg n || true
 /usr/local/sbin/menu
 EOF
 
-# AUTO CLEAR LOG
-echo "*/10 * * * * root echo -n > /var/log/xray/access.log" >/etc/cron.d/clearlog
-echo "*/10 * * * * root echo -n > /var/log/nginx/access.log" >>/etc/cron.d/clearlog
+# CRON
+echo "*/10 * * * * root > /var/log/xray/access.log" > /etc/cron.d/clearlog
+echo "*/10 * * * * root > /var/log/nginx/access.log" >> /etc/cron.d/clearlog
 
-# ENABLE SERVICE
-systemctl daemon-reload
-systemctl enable cron
 systemctl restart cron
 
-systemctl enable nginx
-systemctl enable xray
-systemctl enable haproxy
-systemctl enable fail2ban
-systemctl enable vnstat
-
-systemctl restart nginx
-systemctl restart xray
-systemctl restart haproxy
-systemctl restart fail2ban
-systemctl restart vnstat
-
-# TELEGRAM NOTIF
-if [[ ! -z "$CHATID" && ! -z "$KEY" ]]; then
-
-TEXT="
-<b>INSTALL VPS SUCCESS</b>
-
-Domain : <code>$domain</code>
-IP VPS : <code>$IP</code>
-
-<i>Install selesai dari Github pribadi</i>
-"
-
-curl -s --max-time $TIMES \
--d "chat_id=$CHATID&disable_web_page_preview=1&text=$TEXT&parse_mode=html" \
-$URL >/dev/null
-
-fi
+# ENABLE SERVICE
+systemctl enable nginx xray haproxy fail2ban vnstat
 
 # CLEAN
 history -c
-
 rm -rf /root/*.zip
 
 clear
 
 echo -e "${Green}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${Green}INSTALL SCRIPT BERHASIL${NC}"
+echo -e "${Green}INSTALL BERHASIL${NC}"
 echo -e "${Green}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 echo -e "Domain : ${YELLOW}$domain${NC}"
-echo -e "Repo   : ${YELLOW}$REPO${NC}"
-echo ""
-echo -e "Ketik ${YELLOW}menu${NC} untuk membuka menu"
+echo -e "Ketik menu untuk masuk"
 echo ""
 
-read -p "Tekan ENTER untuk reboot..."
+read -p "ENTER untuk reboot..."
 reboot
