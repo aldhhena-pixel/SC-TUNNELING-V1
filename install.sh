@@ -154,28 +154,38 @@ echo "Downloading Menu..."
 
 cd /root
 
-wget -O menu.zip ${REPO}limit/menu.zip
-
-unzip -o menu.zip
-
-chmod +x menu/*
-
-mv menu/* /usr/local/sbin
-
-chmod +x /usr/local/sbin/*
-
-ln -sf /usr/local/sbin/menu /usr/bin/menu
-
 rm -rf menu
 rm -rf menu.zip
 
-# HAPUS LICENSE CHECKER
-sed -i '/arivpnstores\/izin/d' /usr/local/sbin/menu
-sed -i '/Masa Aktif Script Kamu Sudah Habis/d' /usr/local/sbin/menu
-sed -i '/Whatsapp =/d' /usr/local/sbin/menu
-sed -i '/Telegram =/d' /usr/local/sbin/menu
+wget ${REPO}limit/menu.zip
+
+unzip -o menu.zip
+
+chmod +x *
+
+mv add* /usr/local/sbin/ 2>/dev/null
+mv cek* /usr/local/sbin/ 2>/dev/null
+mv del* /usr/local/sbin/ 2>/dev/null
+mv renew* /usr/local/sbin/ 2>/dev/null
+mv menu /usr/local/sbin/ 2>/dev/null
+mv m-* /usr/local/sbin/ 2>/dev/null
+mv bot* /usr/local/sbin/ 2>/dev/null
+mv clearlog /usr/local/sbin/ 2>/dev/null
+mv restart /usr/local/sbin/ 2>/dev/null
+
+chmod +x /usr/local/sbin/*
+
+rm -f /usr/bin/menu
+ln -s /usr/local/sbin/menu /usr/bin/menu
+
+# HAPUS LICENSE / EXPIRED CHECKER
+sed -i '/Masa Aktif Script Kamu Sudah Habis/,+8d' /usr/local/sbin/menu
+sed -i '/if \[\[ "\\$certifacate" -le "0" \]\]; then/,/fi/c\sts="\${Info}"' /usr/local/sbin/menu
 
 chmod +x /usr/local/sbin/menu
+
+rm -rf menu
+rm -rf menu.zip
 
 # PROFILE
 cat >/root/.profile <<EOF
@@ -246,4 +256,4 @@ echo -e "Ketik ${YELLOW}menu${NC} untuk membuka menu"
 echo ""
 
 read -p "Tekan ENTER untuk reboot..."
-reboo
+reboot
