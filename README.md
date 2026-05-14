@@ -1,29 +1,29 @@
 <h1 align="center">
-<h1 align="center">Autoscript Tunneling vip
+<h1 align="center">Autoscript Tunneling VIP
 
 ### INSTALL SCRIPT SESUAI STEP
+
 - step 1
-```
+```bash
 apt update -y && apt upgrade -y --fix-missing && apt install -y xxd bzip2 wget curl sudo lsof socat net-tools bc coreutils build-essential bsdmainutils screen dos2unix && update-grub && apt dist-upgrade -y && sleep 2 && reboot
 ```
+
 - step 2
-```
-screen -S setup-session bash -c "wget -q https://raw.githubusercontent.com/arivpnstores/v7/main/install.sh && chmod +x install.sh && ./install.sh; read -p 'Tekan enter untuk keluar...'"
+```bash
+screen -S setup-session bash -c "wget -q https://raw.githubusercontent.com/aldhhena-pixel/SC-TUNNELING-V1/main/install.sh && chmod +x install.sh && ./install.sh; read -p 'Tekan enter untuk keluar...'"
 ```
 
-**Perintah Untuk Menghubungkan Ulang Jika Disconnected saat pemasangan**
-```
+### PERINTAH UNTUK MENGHUBUNGKAN ULANG JIKA DISCONNECTED SAAT PEMASANGAN
+```bash
 screen -r -d setup
 ```
 
 ### PERINTAH UPDATE
+```bash
+wget https://raw.githubusercontent.com/aldhhena-pixel/SC-TUNNELING-V1/main/update.sh && chmod +x update.sh && ./update.sh
 ```
 
-wget https://raw.githubusercontent.com/arivpnstores/v7/main/update.sh && chmod +x update.sh && ./update.sh
-
-```
-
-### TESTED ON OS 
+### TESTED ON OS
 - UBUNTU 20.04.05
 - DEBIAN 10
 
@@ -31,7 +31,7 @@ wget https://raw.githubusercontent.com/arivpnstores/v7/main/update.sh && chmod +
 - Tambah Swap 1GiB
 - Pemasangan yang dinamis
 - Tuning profile pada server
-- Xray Core by [@ARI_VPN_STORE](https://github.com/arivpnstores)
+- Xray Core
 - Penambahan fail2ban
 - Auto block sebagian ads indo by default
 - Auto clear log per 3 menit
@@ -39,7 +39,7 @@ wget https://raw.githubusercontent.com/arivpnstores/v7/main/update.sh && chmod +
 - User Details Akun
 
 ### PORT INFO
-```
+```text
 - TROJAN WS 443
 - TROJAN GRPC 443
 - SHADOWSOCKS WS 443
@@ -57,7 +57,7 @@ wget https://raw.githubusercontent.com/arivpnstores/v7/main/update.sh && chmod +
 ```
 
 ### SETTING CLOUDFLARE
-```
+```text
 - SSL/TLS : FULL
 - SSL/TLS Recommender : OFF
 - GRPC : ON
@@ -66,72 +66,46 @@ wget https://raw.githubusercontent.com/arivpnstores/v7/main/update.sh && chmod +
 - UNDER ATTACK MODE : OFF
 ```
 
-## System Support
+## SYSTEM SUPPORT
 
 ### Debian:
-- **9 (Stretch)** ![Unstable](https://img.shields.io/badge/status-Unstable-orange)
-- **10 (Buster)** ![Stable](https://img.shields.io/badge/status-Stable-brightgreen)
-- **11 (Bullseye)** ![Stable](https://img.shields.io/badge/status-Stable-brightgreen)
-- **12 (Bookworm)** ![Stable](https://img.shields.io/badge/status-Stable-brightgreen)
-- **13 (Trixie)** ![ComingSoon](https://img.shields.io/badge/status-Coming%20Soon-blue)
-- **14 (Forky)** ![ComingSoon](https://img.shields.io/badge/status-Coming%20Soon-blue)
+- 10 (Buster)
+- 11 (Bullseye)
+- 12 (Bookworm)
 
 ### Ubuntu:
-- **18.04 LTS (Bionic)** ![Unstable](https://img.shields.io/badge/status-Unstable-orange)
-- **18.10 (Cosmic)** ![Unstable](https://img.shields.io/badge/status-Unstable-orange)
-- **19.04 (Disco)** ![Unstable](https://img.shields.io/badge/status-Unstable-orange)
-- **19.10 (Eoan)** ![Unstable](https://img.shields.io/badge/status-Unstable-orange)
-- **20.04 LTS (Focal)** ![Stable](https://img.shields.io/badge/status-Stable-brightgreen)
-- **20.10 (Groovy)** ![Stable](https://img.shields.io/badge/status-Stable-brightgreen)
-- **21.04 (Hirsute)** ![Stable](https://img.shields.io/badge/status-Stable-brightgreen)
-- **21.10 (Impish)** ![Stable](https://img.shields.io/badge/status-Stable-brightgreen)
-- **22.04 LTS (Jammy)** ![Stable](https://img.shields.io/badge/status-Stable-brightgreen)
-- **22.10 (Kinetic)** ![Stable](https://img.shields.io/badge/status-Stable-brightgreen)
-- **23.04 (Lunar)** ![Unstable](https://img.shields.io/badge/status-Unstable-orange)
-- **23.10 (Mantic)** ![Stable](https://img.shields.io/badge/status-Stable-brightgreen)
-- **24.04 LTS (Noble)** ![Stable](https://img.shields.io/badge/status-Stable-brightgreen)
-- **24.10 (Oracular)** ![Error](https://img.shields.io/badge/status-Error-red)
+- 20.04 LTS (Focal)
+- 22.04 LTS (Jammy)
+- 24.04 LTS (Noble)
 
 ### Kali Linux:
-- **Kali Linux Rolling** ![Stable](https://img.shields.io/badge/status-Stable-brightgreen)
+- Kali Linux Rolling
 
 ### Virtualization:
 - Xen
 - KVM
 - VMware
-- XenServer
-- LXC (Linux Containers)
-- OpenVZ 7 (Open Virtuozzo 7)
 - Proxmox
 - Virtuozzo
-- Master Server
-- ZFS
+- OpenVZ 7
 
 ### Minimum Specifications:
-- **RAM**: 512MB ![Stable](https://img.shields.io/badge/status-Stable-brightgreen)
-- **SSD**: 10GB ![Stable](https://img.shields.io/badge/status-Stable-brightgreen)
-- **vCPU**: 1 ![Stable](https://img.shields.io/badge/status-Stable-brightgreen)
+- RAM 512MB
+- SSD 10GB
+- 1 vCPU
 
 ### Recommended Specifications:
-- All Ubuntu versions
-- All Debian versions
-- All Kali Linux versions
-- All Virtualization environments
-- **1vCPU, 1GB RAM, 10GB SSD**
+- 1vCPU
+- 1GB RAM
+- 10GB SSD
 
 ## Architecture Support:
-- **x86-64 (64-bit)** ![Stable](https://img.shields.io/badge/status-Stable-brightgreen)
-- **Other architectures (e.g., ARM, i386, etc.)** are **not supported**.
+- x86-64 (64-bit)
 
 <p align="center">
-<a href="#"><img title="ABOUT-ME" src="https://img.shields.io/badge/ABOUT ME-green?colorA=%23ff0000&colorB=%23017e40&style=for-the-badge"></a>
+<a href="https://github.com/aldhhena-pixel"><img title="GitHub" src="https://img.shields.io/badge/GITHUB-aldhhena--pixel-green?style=for-the-badge&logo=github"></a>
 </p>
+
 <p align="center">
-<a href="https://github.com/Mrz051"><img title="Author" src="https://img.shields.io/badge/AUTHOR-PEYX-orange.svg?style=for-the-badge&logo=github"></a>
-</p>
-<p align="center">
-<a href="https://t.me/peyyx" target=”_blank”><img src="https://img.shields.io/static/v1?style=for-the-badge&logo=Telegram&label=Telegram&message=Click%20Here&color=blue"></a>
-</p>
-<p align="center">
-<a href="https://wa.me/6285647299390" target=”_blank”><img src="https://img.shields.io/static/v1?style=for-the-badge&logo=Whatsapp&label=Whatsapp&message=Click%20Here&color=green"></a>
+<a href="https://github.com/aldhhena-pixel/SC-TUNNELING-V1"><img title="Repository" src="https://img.shields.io/badge/REPOSITORY-SC--TUNNELING--V1-blue?style=for-the-badge&logo=github"></a>
 </p>
